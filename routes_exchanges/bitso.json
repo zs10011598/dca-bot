@@ -1,0 +1,4 @@
+{
+	"get_price": "https://api.bitso.com/v3/ticker/",
+	"book_btc": "book=btc_mxn"
+}
