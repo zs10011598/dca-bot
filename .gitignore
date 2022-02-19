@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+dca-bot.pem
+./dca-bot.pem
