@@ -20,7 +20,7 @@ def main():
 	
 	routes = get_routes(exchange)
 	url = routes['get_price']
-	book = routes['book_btc']
+	book = routes['book_' + book]
 
 
 	for i in range(5):
@@ -39,7 +39,8 @@ def main():
 					'low': data['payload']['low'],
 					'ask': data['payload']['ask'],
 					'bid': data['payload']['bid'],
-					'change_24': data['payload']['change_24']
+					'change_24': data['payload']['change_24'],
+					'exchange': exchange
 				}
 
 				logging.info('Getting price => Exchange {0} - $ {1} - Book {2}' \

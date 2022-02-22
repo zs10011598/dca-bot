@@ -8,7 +8,8 @@ INSERT INTO price(
 	low,
 	ask,
 	bid,
-	change_24)
+	change_24,
+	exchange)
 VALUES (
 	{high},
 	{last},
@@ -19,5 +20,6 @@ VALUES (
 	{low},
 	{ask},
 	{bid},
-	{change_24}
+	{change_24},
+	'{exchange}'
 )
