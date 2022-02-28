@@ -22,7 +22,20 @@ CREATE INDEX idx_price_exchange ON price(exchange);
 CREATE TABLE transaction(id serial,
 	bot_id varchar(30),
 	cycle integer default 1,
-	datetime_request timestamp default current_timestamp);
+	transaction_index integer default 1,
+	transaction_datetime timestamp default current_timestamp,
+	type_operation varchar(4) default 'buy',
+	entry_price double precision,
+	transaction_fee double precision,
+	transaction_currency_ammount double precision,
+	cummulated_currency_ammount double precision,
+	average_price double precision,
+	profit double precision);
+
+CREATE INDEX idx_transaction_bot_id ON transaction(bot_id);
+CREATE INDEX idx_transaction_transaction_datetime ON transaction(transaction_datetime);
+CREATE INDEX idx_transaction_type_operation ON transaction(type_operation);
+CREATE INDEX idx_transaction_cycle ON transaction(cycle);
 
 
 CREATE TABLE parameter(id serial,

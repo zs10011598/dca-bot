@@ -1,6 +1,9 @@
 import os
 import json
 import psycopg2
+import logging
+
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 
 def get_last_price(exchange):
@@ -59,9 +62,36 @@ def run_query_db(sql_name, row):
 	conn = get_db_conn()
 	cur = conn.cursor()
 	query = get_sql(sql_name).format(**row)
+	if os.environ['environment'] == 'test':
+		logging.info('SQL: {0}'.format(query))
 	cur.execute(query)
 	result = cur.fetchall()
 	cur.close()
 	conn.close()
 
 	return result
+
+
+def get_last_transaction(bot_id):
+	'''
+		Description: get last transaction of a given bot
+	'''
+	result = run_query_db('get_last_transaction_bot', {'bot_id': bot_id})
+	return result[0] if len(result) > 0 else None
+
+
+def should_buy_now():
+	'''
+		Description: decide wheter bot should buy now
+	'''
+	# ToDo
+	return True
+
+
+def buy(bot_id, exchange, cryptocurrency, cycle, transaction_index, 
+		type_operation, entry_price, transaction_currency_ammount):
+	'''
+		Description: function to buy
+	'''
+	# ToDo
+	pass
