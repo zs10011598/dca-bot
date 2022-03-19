@@ -50,6 +50,6 @@ def main():
 		except Exception as e:
 			logging.error('Getting price => Exchange {0} - Book {1} - Error {2}'.format(exchange, book, str(e)))
 
-		time.sleep(10)
+		time.sleep(12)
 
 main()
