@@ -2,6 +2,8 @@ import os
 import json
 import psycopg2
 import logging
+from api_connections.bitso import *
+import time
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
@@ -10,7 +12,7 @@ def get_last_price(exchange):
 	'''
 		Description: get last price from db
 	'''
-	return run_query_db('get_last_price', {'exchange': exchange})[0]
+	return run_query_db('get_last_price', {'exchange': exchange})[0][0]
 
 
 def get_routes(exchange):
@@ -84,14 +86,91 @@ def should_buy_now():
 	'''
 		Description: decide wheter bot should buy now
 	'''
+	# ToDo: more sophisticated logic
+	return True
+
+
+def do_transaction(bot_id, exchange, cryptocurrency, cycle, transaction_index, 
+		type_operation, entry_price, transaction_currency_ammount):
+	'''
+		Description: function to buy or to sell
+	'''
+	environment = os.environ['environment']
+	exchange = os.environ['exchange']
+	oid = ''
+	fee_percent = 0.0065
+
+	last_transaction = get_last_transaction(bot_id)
+
+	if environment == 'production':
+		pass
+	elif environment == 'test':
+
+		oid = int(time.time()*1000)
+
+		if type_operation == 'buy':
+			
+			transaction_cryptocurrency_ammount = transaction_currency_ammount / entry_price
+			transaction_cryptocurrency_fee = transaction_cryptocurrency_ammount * fee_percent
+			transaction_cryptocurrency_ammount -= transaction_cryptocurrency_fee
+			transaction_currency_fee = 0
+
+			if last_transaction == None or transaction_index == 0:
+				cummulated_currency_ammount = transaction_currency_ammount
+				cummulated_cryptocurrency_ammount = transaction_cryptocurrency_ammount
+			else:
+				cummulated_currency_ammount = last_transaction[9] + transaction_currency_ammount
+				cummulated_cryptocurrency_ammount = last_transaction[12] + transaction_cryptocurrency_ammount
+
+			average_price = cummulated_currency_ammount / cummulated_cryptocurrency_ammount
+			profit = 0
+
+		elif type_operation == 'sell':
+			transaction_cryptocurrency_ammount = 0
+			transaction_cryptocurrency_fee = 0
+			cummulated_currency_ammount = last_transaction[9]
+			cummulated_cryptocurrency_ammount = last_transaction[12]
+			transaction_currency_ammount =  entry_price * cummulated_cryptocurrency_ammount
+			transaction_currency_fee = transaction_currency_ammount * fee_percent
+			transaction_currency_ammount -= transaction_currency_fee
+			average_price = transaction_currency_ammount / cummulated_cryptocurrency_ammount
+			profit = transaction_currency_ammount - cummulated_currency_ammount
+
+	row = {}
+	row['bot_id'] = bot_id
+	row['cycle'] = cycle 
+	row['transaction_index'] = transaction_index
+	row['type_operation'] = type_operation
+	row['entry_price'] = entry_price
+	row['transaction_currency_fee'] = transaction_currency_fee
+	row['transaction_currency_ammount'] = transaction_currency_ammount
+	row['environment'] = environment
+	row['order_id'] = oid
+	row['exchange'] = exchange 
+	row['cummulated_currency_ammount'] = cummulated_currency_ammount
+	row['average_price'] = average_price
+	row['cummulated_cryptocurrency_ammount'] = cummulated_cryptocurrency_ammount
+	row['transaction_cryptocurrency_ammount'] = transaction_cryptocurrency_ammount
+	row['transaction_cryptocurrency_fee'] = transaction_cryptocurrency_fee
+	row['profit'] = profit
+
+	write_db_operation('insert_transaction', row)
+
+	return oid
+
+
+def get_parameter(parameter):
+	'''
+		Description: get a specified parameter
+	'''
 	# ToDo
 	return True
 
 
-def buy(bot_id, exchange, cryptocurrency, cycle, transaction_index, 
-		type_operation, entry_price, transaction_currency_ammount):
+def get_balance(exchange):
 	'''
-		Description: function to buy
+		Description: get balance
 	'''
-	# ToDo
-	pass
+	if exchange == 'bitso':
+		return get_bitso_balance()
+	return None

@@ -46,3 +46,11 @@ CREATE TABLE parameter(id serial,
 CREATE INDEX idx_parameter_key ON parameter(key); 
 
 INSERT INTO parameter(key, value, datatype) VALUES('keep', 'True', 'boolean');
+
+ALTER TABLE transaction ADD COLUMN cummulated_cryptocurrency_ammount double precision;
+ALTER TABLE transaction ADD COLUMN environment varchar(10);
+ALTER TABLE transaction ADD COLUMN order_id varchar(20);
+ALTER TABLE transaction ADD COLUMN exchange varchar(10);
+ALTER TABLE transaction ADD COLUMN transaction_cryptocurrency_fee double precision;
+ALTER TABLE transaction RENAME COLUMN transaction_fee TO transaction_currency_fee;
+ALTER TABLE transaction ADD COLUMN transaction_cryptocurrency_ammount double precision;

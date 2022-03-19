@@ -1,4 +1,6 @@
 {
 	"get_price": "https://api.bitso.com/v3/ticker/",
+	"get_balance": "https://api.bitso.com/v3/balance/?currency=mxn",
+	"get_balance_path": "/v3/balance/?currency=mxn",
 	"book_btc": "book=btc_mxn"
 }
