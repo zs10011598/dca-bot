@@ -16,12 +16,11 @@ def main():
 	logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 	exchange = os.environ['exchange']
-	book = os.environ['book']
+	cryptocurrency = os.environ['cryptocurrency']
 	
 	routes = get_routes(exchange)
 	url = routes['get_price']
-	book = routes['book_' + book]
-
+	book = routes['book_' + cryptocurrency]
 
 	for i in range(5):
 		res = requests.get('{0}?{1}'.format(url, book))
