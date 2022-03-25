@@ -97,7 +97,7 @@ def main():
 
 			elif average_price*(1 + sell_percentage) <= last_price:
 
-				logging.info('Bot [{0}] Selling => Exchange {1} - cryptocurrency {4}' \
+				logging.info('Bot [{0}] Selling => Exchange {1} - cryptocurrency {2}' \
 								.format(bot_id, exchange, cryptocurrency))
 
 				oid = do_transaction(bot_id, exchange, cryptocurrency, cycle, -1, type_operation='sell', 
